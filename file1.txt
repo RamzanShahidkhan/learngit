@@ -1,0 +1,54 @@
+14:53
+
+showMat :: [String] -> IO()
+showMat [y] = putStr(y)
+showMat  (x:xs) = do
+				putStrLn(x)
+				showMat(xs)
+
+				
+--------------Magnified Letter : stretch --------------
+stretch :: Int -> Int -> [String] -> [String]
+stretch h v (x:xs) = verticalS v  (horizontalS h (x:xs)) 
+
+-- Horizontal Stretch -- 
+horizontalS :: Int -> [String] -> [String]
+horizontalS h  [] = []
+horizontalS h  (x:xs) = stringHS h x : horizontalS h  xs
+
+stringHS :: Int -> String -> String
+stringHS _ [] = "" 
+stringHS h (x:xs) = (replicate h x) ++ stringHS h xs
+  
+-- Vertical Stretch --
+verticalS :: Int -> [String] -> [String]
+verticalS v [] = []
+verticalS v (x:xs) = replicate v x ++ verticalS v xs
+
+
+-----------------frameM: Framing Letter----------------
+frameM :: String -> [String] -> [String]
+frameM xs ys = frameM2 (reverse xs) ys
+
+-- frameM2 --
+frameM2 :: String -> [String] -> [String]
+frameM2 xs ys  
+			| (length xs == 1) = frame (xs !! 0) ys
+			| otherwise = frameM2 (tail xs) (res)
+			where 
+			i = (xs !! 0)
+			res = frame i ys
+						
+ 
+-- frame: single frame --
+frame :: Char -> [String] -> [String]					
+frame c (y:ys) = [(hLines (length y + 2) c) ] ++ (rs) ++ [(hLines (length y + 2) c)]
+				 where rs = (vLines c (y:ys))
+-- vLines: frame vertical lines --
+vLines :: Char -> [String] -> [String]
+vLines c [] = []				
+vLines c (y:ys) =[ c :y ++c:""]  ++ vLines c ys  
+-- hLines : frame upper and lower horizontal lines --
+hLines :: Int -> Char -> String
+hLines 0 c = []				
+hLines x c =  c : (hLines (x-)c)
